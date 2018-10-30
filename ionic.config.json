@@ -1,0 +1,7 @@
+{
+  "name": "handy",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
