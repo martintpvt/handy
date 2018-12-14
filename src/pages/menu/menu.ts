@@ -1,7 +1,6 @@
 import { AuthProvider } from './../../providers/auth/auth';
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Nav, App } from 'ionic-angular';
-import { ThrowStmt } from '@angular/compiler';
 
 @IonicPage()
 @Component({
@@ -13,6 +12,7 @@ export class MenuPage {
   rootPage: any;
   pages = [];
   username = '';
+  user: any;
 
   @ViewChild(Nav) nav: Nav;
 
@@ -20,6 +20,7 @@ export class MenuPage {
     public navParams: NavParams,
     private authProvider: AuthProvider,
     private appCtrl: App) {
+      this.user = JSON.parse(localStorage.getItem('userData'));
   }
 
   ionViewDidLoad() {
@@ -33,7 +34,8 @@ export class MenuPage {
       { title: 'Payment', page: 'PaymentPage', icon: 'home' }
     ];
     this.openPage('ProfilePage');
-    this.username = this.authProvider.currentUser.name;
+    console.log(this.user);
+    this.username = this.user.name;
   }
 
   logout() {

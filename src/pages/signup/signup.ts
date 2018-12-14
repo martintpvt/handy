@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the SignupPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { LoginPage } from '../login/login';
+import { AuthProvider } from '../../providers/auth/auth';
 
 @IonicPage()
 @Component({
@@ -15,11 +10,42 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class SignupPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  responseData: any;
+  userData = {
+    "password": "",
+    "name": "",
+    "email": "",
+    "password_confirmation": ""
+  };
+
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    public authService: AuthProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SignupPage');
   }
 
+  signup() {
+    this.authService.postData(this.userData, 'signup').then((result) => {
+      this.responseData = result;
+      if (this.responseData.data) {
+        console.log(this.responseData);
+        alert("Usuario creado exitosamente");
+        this.navCtrl.push(LoginPage);
+      }
+      else { 
+        alert("Error creando el usuario");
+        console.log("User already exists");
+      }
+    }, (err) => {
+      alert("Error en la api");
+      console.log("Error de la api")
+    });
+  }
+
+  login() {
+    this.navCtrl.push(LoginPage);
+  }
 }

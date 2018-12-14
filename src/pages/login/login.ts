@@ -10,13 +10,13 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 export class LoginPage {
 
   user = {
-    name: '',
-    pw: ''
+    username: '',
+    password: ''
   }
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
-    private autProvider: AuthProvider,
+    private authProvider: AuthProvider,
     private alertCtrl: AlertController) {
   }
 
@@ -25,7 +25,7 @@ export class LoginPage {
   }
 
   loginUser() {
-    this.autProvider.login(this.user.name, this.user.pw).then(success => {
+    this.authProvider.login(this.user).then(success => {
       if(success) {
         this.navCtrl.setRoot('MenuPage');
       } else {
@@ -39,4 +39,7 @@ export class LoginPage {
     })
   }
 
+  navigateSignUp() {
+    this.navCtrl.push('SignupPage');
+  }
 }

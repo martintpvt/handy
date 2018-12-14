@@ -8,14 +8,15 @@
   <ion-list>
     <ion-item>
       <ion-label fixed>Username</ion-label>
-      <ion-input type="text" [(ngModel)]="user.name"></ion-input>
+      <ion-input type="text" [(ngModel)]="user.username"></ion-input>
     </ion-item>
  
     <ion-item>
       <ion-label fixed>Password</ion-label>
-      <ion-input type="password" [(ngModel)]="user.pw"></ion-input>
+      <ion-input type="password" [(ngModel)]="user.password"></ion-input>
     </ion-item>
   </ion-list>
  
   <button ion-button full (click)="loginUser()">Login</button>
+  <button ion-button full (click)="navigateSignUp()">Sign Up</button>
 </ion-content>

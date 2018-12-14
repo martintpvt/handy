@@ -1,49 +1,77 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import 'rxjs/add/operator/map';
 
-export interface User {
-  name: string;
-  role: number;
-}
+let apiUrl = 'http://app.jot-bot/api/';
 
 @Injectable()
 export class AuthProvider {
-  currentUser: User;
 
-  constructor() {
+  userData: any;
+  token: any;
+
+  constructor(
+    public http:  HttpClient
+  ) {
     console.log('Hello AuthProvider Provider');
   }
-
-  login(name: string, pw: string) : Promise<boolean> {
+  
+  login(credentials) {
     return new Promise((resolve, reject) => {
-      if(name === 'admin' && pw === 'admin') {
-        this.currentUser = {
-          name: name,
-          role: 0
-        };
+      this.http.post(
+        apiUrl + 'auth/login', 
+        JSON.stringify(credentials), 
+        { 
+          headers: new HttpHeaders().set('Content-Type', 'application/json') 
+        }
+      ).subscribe(res => {
+        //console.log(res);
+        //this.currentUser = res.json();
+        this.token = JSON.stringify(res);
+        localStorage.setItem('token', this.token);
+        //console.log(this.token.access_token);
+        this.http.get(apiUrl + 'auth/me', {
+          headers: new HttpHeaders().set('Authorization','Bearer ' + JSON.parse(this.token).access_token)
+        }).subscribe(res => {
+          this.userData = JSON.stringify(res);
+          localStorage.setItem('userData', this.userData);
+        }, (err) => {
+          reject(err);
+        })
+        resolve(res);
+      }, (err) => {
+        reject(err);
+      });
+    });
+  }
 
-        resolve(true);
-      } else if(name === 'user' && pw === 'user') {
-        this.currentUser = {
-          name: name,
-          role: 1
-        };
-
-        resolve(true);
-      } else {
-        resolve(false);
-      }
+  postData(credentials, type) {
+    return new Promise((resolve, reject) => {
+      this.http.post(
+        apiUrl + type,
+        JSON.stringify(credentials),
+        {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+        }
+      ).subscribe(res => {
+        //console.log(res);
+        //this.currentUser = res.json();
+        resolve(res);
+      }, (err) => {
+        reject(err);
+      });
     });
   }
 
   isLoggedIn() {
-    return this.currentUser != null;
+    return localStorage.getItem('userData') != null;
   }
-
+/*
   isAdmin() {
     return this.currentUser.role === 0;
   }
-
+*/
   logout() {
-    this.currentUser = null;
+    localStorage.clear();
   }
 }
